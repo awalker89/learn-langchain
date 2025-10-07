@@ -15,16 +15,20 @@ curl -s -X POST http://localhost:8000/message \
   -H 'Content-Type: application/json' \
   -d '{"text":"hi","thread_ts":"42"}' | jq
 
+
 curl -s -X POST http://localhost:8000/message \
   -H 'Content-Type: application/json' \
-  -d '{"text":"Alice","thread_ts":"42"}' | jq
+  -d '{"text":"Alex","thread_ts":"42"}' | jq
+
 
 curl -s -X POST http://localhost:8000/message \
   -H 'Content-Type: application/json' \
   -d '{"text":"forward","thread_ts":"42"}' | jq
 
+
 curl -s -X POST http://localhost:8000/message \
   -H 'Content-Type: application/json' \
   -d '{"text":"left","thread_ts":"42"}' | jq
+
 
 ```

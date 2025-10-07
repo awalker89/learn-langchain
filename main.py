@@ -93,6 +93,23 @@ def outcome_node(state: State):
     print(f"Bot (thread {state.get('thread_ts')}): {msg}")
     return {**state, "outcome": msg, "bot_response": msg}
 
+
+def left_node(state: State):
+    msg = "You chose to go left and found a treasure! 🎉"
+    print(f"Bot (thread {state.get('thread_ts')}): {msg}")
+    return {**state, "outcome": msg, "bot_response": msg}
+
+def right_node(state: State):
+    msg = "You chose to go right and fell into a pit! 💥"
+    print(f"Bot (thread {state.get('thread_ts')}): {msg}")
+    return {**state, "outcome": msg, "bot_response": msg}
+
+
+def thanks_for_playing_node(state: State):
+    msg = "Thanks for playing! Goodbye!"
+    print(f"Bot (thread {state.get('thread_ts')}): {msg}")
+    return {**state, "outcome": msg, "bot_response": msg}
+
 # ---------------------------
 # Build the graph and FastAPI app
 # ---------------------------
@@ -103,10 +120,24 @@ graph_builder = StateGraph(State)
 graph_builder.add_node("name_node", name_node)
 graph_builder.add_node("direction_node", direction_node)
 graph_builder.add_node("outcome_node", outcome_node)
+graph_builder.add_node("thanks_for_playing_node", thanks_for_playing_node)
+
+graph_builder.add_node("left_node", left_node)
+graph_builder.add_node("right_node", right_node)
 
 graph_builder.add_edge(START, "name_node")
 graph_builder.add_edge("name_node", "direction_node")
-graph_builder.add_edge("direction_node", "outcome_node")
+
+graph_builder.add_conditional_edges(
+    "direction_node", 
+    path=lambda state: state.get("direction") + "_node",
+    path_map=["left_node", "right_node"],
+)
+
+graph_builder.add_edge("right_node", "thanks_for_playing_node")
+graph_builder.add_edge("left_node", "thanks_for_playing_node")
+
+graph_builder.add_edge("thanks_for_playing_node", "outcome_node")
 graph_builder.add_edge("outcome_node", END)
 
 
@@ -191,4 +222,6 @@ async def handle_slack_message(message: SlackMessage):
 if __name__ == "__main__":
     print("Starting Slack Bot FastAPI server...")
     print("Send messages to: http://localhost:8000/message")
+    # import os
+    # os.unlink("checkpoints.db") if os.path.exists("checkpoints.db") else None
     uvicorn.run(app, host="0.0.0.0", port=8000)
