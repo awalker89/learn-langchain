@@ -1,21 +1,30 @@
 
+**Start App**
+```
+uv run python main.py
 ```
 
-rm checkpoints.db
+__Kill the server an re-start it between each curl to confirm state is maintained__
 
 
-curl -q -X POST "http://localhost:8000/message" \
-         -H "Content-Type: application/json" \
-         -d '{"text": "Hello", "thread_ts": "1"}' | jq .message
+**Simulate Slack Events**
 
+```bash 
 
-curl -X POST "http://localhost:8000/message" \
-         -H "Content-Type: application/json" \
-         -d '{"text": "Alex", "thread_ts": "1"}' | jq .message
+curl -s -X POST http://localhost:8000/message \
+  -H 'Content-Type: application/json' \
+  -d '{"text":"hi","thread_ts":"42"}' | jq
 
+curl -s -X POST http://localhost:8000/message \
+  -H 'Content-Type: application/json' \
+  -d '{"text":"Alice","thread_ts":"42"}' | jq
 
-curl -X POST "http://localhost:8000/message" \
-         -H "Content-Type: application/json" \
-         -d '{"text": "left", "thread_ts": "1"}' | jq .message
+curl -s -X POST http://localhost:8000/message \
+  -H 'Content-Type: application/json' \
+  -d '{"text":"forward","thread_ts":"42"}' | jq
 
+curl -s -X POST http://localhost:8000/message \
+  -H 'Content-Type: application/json' \
+  -d '{"text":"left","thread_ts":"42"}' | jq
 
+```

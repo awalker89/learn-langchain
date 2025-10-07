@@ -1,0 +1,13 @@
+[project]
+name = "slackbot"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.118.0",
+    "langgraph>=0.6.8",
+    "langgraph-checkpoint-sqlite>=2.0.11",
+    "requests>=2.32.5",
+    "uvicorn>=0.37.0",
+]
