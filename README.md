@@ -32,3 +32,5 @@ curl -s -X POST http://localhost:8000/message \
 
 
 ```
+
+![workflow_graph.png](workflow_graph.png)
